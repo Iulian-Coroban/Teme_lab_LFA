@@ -125,7 +125,6 @@ class LAMBDA_NFA:
     def verifica_cuvant(self, cuvant):
             self.tranzitii_utilizate_la_ultima_verificare = []
             vizitat = set()
-
             def recursie(stare_curenta, cuvant_curent):
                 stare_mem = (stare_curenta, cuvant_curent)
                 if stare_mem in vizitat:
@@ -151,13 +150,11 @@ class LAMBDA_NFA:
                         self.tranzitii_utilizate_la_ultima_verificare.append((stare_lambda, litera))
                         if recursie(stare_urmatoare, cuvant_curent[1:]):
                             return True
-        
                         self.tranzitii_utilizate_la_ultima_verificare.pop()
                         if stare_lambda != stare_curenta:
                             self.tranzitii_utilizate_la_ultima_verificare.pop()
                 vizitat.remove(stare_mem)
                 return False
-
             return recursie(self.stari[0], cuvant)
     
     def tranzitii_utilizate(self):
