@@ -162,7 +162,7 @@ class LAMBDA_NFA:
     
 #Verificari
 
-d1 = DFA(("a", "b"), ["q0"], ["q1"], ["q0 q1 a", "q1 q0 b"])
+# d1 = DFA(("a", "b"), ["q0"], ["q1"], ["q0 q1 a", "q1 q0 b"])
 # print("DA" if d1.verifica_cuvant("a") else "Nu")
 # print(d1.tranzitii_utilizate())
 # print(d1)
@@ -172,10 +172,41 @@ d1 = DFA(("a", "b"), ["q0"], ["q1"], ["q0 q1 a", "q1 q0 b"])
 # print(n1.tranzitii_utilizate())
 # print(n1)
 
-l1 = LAMBDA_NFA(("a", "b"), ["q0","q1","q2"], ["q2"], ["q0 q1 lambda", "q1 q1 a", "q1 q0 lambda"])
-print(l1.lambda_closure("q0"))
-print("Da" if l1.verifica_cuvant("aaa") else "Nu")
+# l1 = LAMBDA_NFA(("a", "b"), ["q0","q1","q2"], ["q2"], ["q0 q1 lambda", "q1 q1 a", "q1 q0 lambda"])
+# print(l1.lambda_closure("q0"))
+# print("Da" if l1.verifica_cuvant("aaa") else "Nu")
 
 # print(l1.legaturi)
 # print(l1.tranzitii_utilizate())
 # print(l1)
+
+#citire pentru toate
+
+nume_fisier = input("care este numele fisierului?\n")
+
+f = open(nume_fisier)
+
+alfabet = set(list(f.readline().strip())) #nu se spune nimic in cerinta de alfabet dar am decis sa il citest totusi
+
+n = int(f.readline().strip())
+
+stari = [f.readline().strip() for _ in range(n)]
+
+m = int(f.readline().strip())
+
+tranzitii = [f.readline().strip() for _ in range(m)]
+
+nr_stari_finale = int(f.readline().strip())
+
+stari_finale = [f.readline().strip() for _ in range(nr_stari_finale)]
+
+nr_cuv = int(f.readline().strip())
+
+cuvinte = [f.readline().strip() for _ in range(nr_cuv)]
+
+#in functie de ce ne dorim vom apela constructor ul de: dfa, nfa sau lamba-nfa
+
+d1 = DFA(alfabet,stari,stari_finale,tranzitii)
+
+for cuvant in cuvinte:
+    print("Da" if d1.verifica_cuvant(cuvant) else "nu")
