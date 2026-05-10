@@ -261,3 +261,67 @@ class AFE:
             for p in self.stari:
                 if k in self.legaturi.get(p, {}): del self.legaturi[p][k]
         return self.legaturi[s_ini_noua][s_fin_noua]
+
+
+class Gramatica:
+    def __init__(self, neterminale, terminale, productii, simbol_start):
+        self.neterminale = set(neterminale)
+        self.terminale = set(terminale)
+        self.simbol_start = simbol_start
+        dict_productii = {}
+        for p in productii:
+            stanga, dreapta = p.strip().split()
+            if dreapta == "lambda":
+                dreapta = ""
+            if stanga not in dict_productii:
+                dict_productii[stanga] = [dreapta]
+            else:
+                dict_productii[stanga].append(dreapta)
+        self.productii = dict_productii
+
+    def genereaza_cuvinte(self, lungime_x):
+        rezultate = set()
+        coada = [self.simbol_start]
+        vizitate = {self.simbol_start}
+
+        while coada:
+            curent = coada.pop(0)
+            
+            doar_terminale = True
+            nr_terminale = 0
+            primul_neterminal_idx = -1
+            
+            for i in range(len(curent)):
+                char = curent[i]
+                if char in self.neterminale:
+                    doar_terminale = False
+                    if primul_neterminal_idx == -1:
+                        primul_neterminal_idx = i
+                elif char in self.terminale:
+                    nr_terminale += 1
+
+            if doar_terminale:
+                if len(curent) == lungime_x:
+                    rezultate.add(curent)
+                continue
+
+            if nr_terminale > lungime_x:
+                continue
+            
+            if len(curent) - 1 > lungime_x and nr_terminale == len(curent) - 1:
+                if "" not in self.productii.get(curent[primul_neterminal_idx], []):
+                    continue
+
+            neterminal_ales = curent[primul_neterminal_idx]
+            prefix = curent[:primul_neterminal_idx]
+            sufix = curent[primul_neterminal_idx + 1:]
+            
+            for inlocuitor in self.productii.get(neterminal_ales, []):
+                noua_forma = prefix + inlocuitor + sufix
+                
+                if len(noua_forma) <= lungime_x + 10:
+                    if noua_forma not in vizitate:
+                        vizitate.add(noua_forma)
+                        coada.append(noua_forma)
+        
+        return sorted(list(rezultate))
